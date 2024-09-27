@@ -15,11 +15,11 @@ import java.util.function.Function;
 
 @Service("getFlightsByUser")
 @Description("get user flights based on his userId")
-public class FlightsService implements Function<FlightsService.FlightRequest, List<FlightsService.FlightResponse>> {
+public class FlightsFunction implements Function<FlightsFunction.FlightRequest, List<FlightsFunction.FlightResponse>> {
     private final FlightRepository flightRepository;
     private final ClientRepository clientRepository;
 
-    public FlightsService(FlightRepository flightRepository, ClientRepository clientRepository) {
+    public FlightsFunction(FlightRepository flightRepository, ClientRepository clientRepository) {
         this.flightRepository = flightRepository;
         this.clientRepository = clientRepository;
     }

@@ -1,6 +1,7 @@
 package fly.intelligent.genai.controllers;
 
 import fly.intelligent.genai.dto.ChatDTO;
+import fly.intelligent.genai.services.DestinationsService;
 import fly.intelligent.genai.services.FAQService;
 import fly.intelligent.genai.services.GeneralInfoService;
 import fly.intelligent.genai.services.ReservationsService;
@@ -14,11 +15,16 @@ public class AssistantController {
     private final GeneralInfoService generalInfoService;
     private final FAQService faqService;
     private final ReservationsService reservationsService;
+    private final DestinationsService destinationsService;
 
-    public AssistantController(GeneralInfoService generalInfoService, FAQService faqService, ReservationsService reservationsService) {
+    public AssistantController(GeneralInfoService generalInfoService,
+                               FAQService faqService,
+                               ReservationsService reservationsService,
+                               DestinationsService destinationsService) {
         this.generalInfoService = generalInfoService;
         this.faqService = faqService;
         this.reservationsService = reservationsService;
+        this.destinationsService = destinationsService;
     }
 
     @PostMapping("/info")
@@ -34,6 +40,11 @@ public class AssistantController {
     @PostMapping("/reservations")
     public Flux<String> getReservations(@RequestBody ChatDTO chat) {
         return this.reservationsService.get(chat);
+    }
+
+    @PostMapping("/destinations")
+    public Flux<String> getBestDestinations(@RequestBody ChatDTO chat) {
+        return this.destinationsService.get(chat);
     }
 
 }

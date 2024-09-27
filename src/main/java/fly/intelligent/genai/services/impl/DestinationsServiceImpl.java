@@ -1,7 +1,7 @@
 package fly.intelligent.genai.services.impl;
 
 import fly.intelligent.genai.dto.ChatDTO;
-import fly.intelligent.genai.services.ReservationsService;
+import fly.intelligent.genai.services.DestinationsService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -15,14 +15,15 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
-public class ReservationsServiceImpl implements ReservationsService {
+public class DestinationsServiceImpl implements DestinationsService {
     private final ChatClient chatClient;
     @Value("classpath:prompts/main-system-message.st")
     private Resource mainSystemMessage;
 
-    public ReservationsServiceImpl(ChatClient chatClient) {
+    public DestinationsServiceImpl(ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
@@ -34,7 +35,8 @@ public class ReservationsServiceImpl implements ReservationsService {
         Message systemMessage = systemPromptTemplate.createMessage(Map.of("userId", "1", "question_answer_context", ""));
 
         Prompt prompt = new Prompt(List.of(userMessage, systemMessage), OpenAiChatOptions.builder()
-                .withFunction("getFlightsByUser")
+                .withFunctions(Set.of("getDestinationBySeasons",
+                        "getBudgetByDestinationAndNumberOfDays"))
                 .build());
 
         return this.chatClient

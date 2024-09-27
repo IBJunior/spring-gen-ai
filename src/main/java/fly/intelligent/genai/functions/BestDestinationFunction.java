@@ -14,12 +14,12 @@ import java.util.function.Function;
 
 @Service("getDestinationBySeasons")
 @Description("get best destination based on a list of seasons")
-public class BestDestinationService implements Function<BestDestinationService.BestDestinationRequest,
-        BestDestinationService.BestDestinationResponse> {
+public class BestDestinationFunction implements Function<BestDestinationFunction.BestDestinationRequest,
+        BestDestinationFunction.BestDestinationResponse> {
 
     private final DestinationRepository destinationRepository;
 
-    public BestDestinationService(DestinationRepository destinationRepository) {
+    public BestDestinationFunction(DestinationRepository destinationRepository) {
         this.destinationRepository = destinationRepository;
     }
 
