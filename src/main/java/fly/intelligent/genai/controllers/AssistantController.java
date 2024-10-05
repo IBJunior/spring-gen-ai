@@ -27,7 +27,7 @@ public class AssistantController {
         this.destinationsService = destinationsService;
     }
 
-    @PostMapping("/info")
+    @PostMapping("/informations")
     public Flux<String> getInformation(@RequestBody ChatDTO chat) {
         return this.generalInfoService.get(chat.question());
     }
