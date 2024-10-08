@@ -52,7 +52,7 @@ public class SpringGenAiApplication {
             // Create flights
             flightRepository.saveAll(
                     List.of(
-                            new Flight(100L, LocalDate.of(2024, 10, 28), "Maroua,Cameroun", "Lyon, France", 123),
+                            new Flight(100L, LocalDate.of(2024, 12, 28), "Maroua,Cameroun", "Lyon, France", 123),
                             new Flight(200L, LocalDate.of(2025, 1, 4), "Sydney,Australie", "Casablanca, Maroc", 321)
                     )
             );
