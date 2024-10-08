@@ -25,7 +25,7 @@ public class ConversationHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ConversationDTO>> getConversations(){
+    public ResponseEntity<List<ConversationDTO>> getConversations() {
         return new ResponseEntity<>(conversationService.getConversationsHistory(), HttpStatus.OK);
     }
 }

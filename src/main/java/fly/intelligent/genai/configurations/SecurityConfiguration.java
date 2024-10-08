@@ -22,7 +22,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/conversation-history",
                                 "/api/conversation-history/**", "/api/assistant", "/api/assistant/**")
-                        .hasAnyRole("USER", "ADMIN")
+                        .permitAll()// Don't do this in production
                         .requestMatchers("/actuator/health", "/actuator/info")
                         .permitAll()
                         .requestMatchers("/actuator", "/actuator/**")
