@@ -3,19 +3,20 @@ package fly.intelligent.genai.services.impl;
 import fly.intelligent.genai.dto.ChatDTO;
 import fly.intelligent.genai.services.DestinationsService;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
-import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
 
 @Service
 public class DestinationsServiceImpl implements DestinationsService {
@@ -24,7 +25,13 @@ public class DestinationsServiceImpl implements DestinationsService {
     private Resource mainSystemMessage;
 
     public DestinationsServiceImpl(ChatClient chatClient) {
-        this.chatClient = chatClient;
+        // Mutate the chatClient to include functions
+        this.chatClient = chatClient
+                .mutate()
+                .defaultFunctions("getDestinationBySeasons",
+                        "getBudgetByDestinationAndNumberOfDays")
+                .defaultAdvisors(new MessageChatMemoryAdvisor(new InMemoryChatMemory()))
+                .build();
     }
 
     @Override
@@ -32,15 +39,16 @@ public class DestinationsServiceImpl implements DestinationsService {
         UserMessage userMessage = new UserMessage(chat.question());
 
         SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(mainSystemMessage);
-        Message systemMessage = systemPromptTemplate.createMessage(Map.of("userId", "1", "question_answer_context", ""));
-
-        Prompt prompt = new Prompt(List.of(userMessage, systemMessage), OpenAiChatOptions.builder()
-                .withFunctions(Set.of("getDestinationBySeasons",
-                        "getBudgetByDestinationAndNumberOfDays"))
-                .build());
+        Message systemMessage = systemPromptTemplate
+                .createMessage(Map.of("userId", "1", "question_answer_context", ""));
 
         return this.chatClient
-                .prompt(prompt)
+                .prompt()
+                .advisors(a -> a
+                        .param(CHAT_MEMORY_CONVERSATION_ID_KEY, "chatId") // should be dynamic this is used for demo purposes
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
+                .user(userMessage.getContent())
+                .system(systemMessage.getContent())
                 .stream()
                 .content();
     }
