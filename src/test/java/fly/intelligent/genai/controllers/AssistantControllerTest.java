@@ -65,12 +65,14 @@ class AssistantControllerTest {
                 .call()
                 .chatResponse();
 
-        var relevancyEvaluator = new RelevancyEvaluator(evaluatorChatClientBuilder);
+        RelevancyEvaluator relevancyEvaluator = new RelevancyEvaluator(evaluatorChatClientBuilder);
+
         EvaluationRequest evaluationRequest = new EvaluationRequest(userText, List.of(),
                 response.getResult().getOutput().getContent());
         EvaluationResponse evaluationResponse = relevancyEvaluator.evaluate(evaluationRequest);
 
         assertTrue(evaluationResponse.isPass(), "Response is not relevant to the question");
+        // Au moins 80% de précision dans les réponses
         assertThat(evaluationResponse.getScore()).isGreaterThan(0.8f);
 
     }

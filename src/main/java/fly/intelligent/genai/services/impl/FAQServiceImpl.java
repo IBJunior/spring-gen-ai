@@ -24,6 +24,8 @@ public class FAQServiceImpl implements FAQService {
 
     @Override
     public Flux<String> getResponse(ChatDTO chatDTO) {
+        // QuestionAnswerAdvisor is generating a default system message we are overriding it with this one
+        // Normally the message should not be in clear like here,it should come from elsewhere like we did in ReservationsServiceImpl
         String userTextAdvise = """
                 Ton nom est Fly Assistant,tu es un assistant utile de la compagnie aérienne Fly Intelligent.
                                 

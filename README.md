@@ -59,8 +59,8 @@ Ils sont contenus dans ``AssistantController``.
 
 #### Les endpoints d'historisation des chats
 
-Ils sont contenus ``ConversationHistoryController``. Ils permettent de récupérer et d'enregistrer l'historique de
-conversation.
+Ils sont contenus dans ``ConversationHistoryController``. Ils permettent de récupérer et d'enregistrer l'historique des
+conversations.
 
 - GET: http://localhost:8080/api/conversation-history
 - POST: http://localhost:8080/api/conversation-history
